@@ -11,7 +11,10 @@ RUN npm install
 # Kopírujeme zbytek souborů
 COPY . .
 
-# Expose port for development server (často 3000 nebo 5173)
+# Expose port for development server
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# Změna zde - použití příkazu, který je definován v package.json
+CMD ["npm", "start"]
+# Alternativně:
+# CMD ["npx", "react-scripts", "start"]
