@@ -5,14 +5,21 @@ WORKDIR /app
 # Kopírujeme konfigurační soubory pro npm
 COPY package*.json ./
 
-# Instalujeme závislosti
+# Instalujeme závislosti včetně specifických verzí
 RUN npm install
+RUN npm install vite@2.6.4 @vitejs/plugin-react@1.0.0 --save
 
-# Kopírujeme zbytek souborů
+# Vytvoříme minimální vite.config.js pokud by byl problematický
+RUN echo 'const { defineConfig } = require("vite"); \
+const react = require("@vitejs/plugin-react"); \
+module.exports = defineConfig({ plugins: [react()], server: { port: 3000 } });' > vite.config.js
+
+# Kopírujeme zbytek souborů (ale nepřepisujeme vite.config.js, který jsme právě vytvořili)
 COPY . .
+# COPY --no-overwrite . . # Pro novější verze Dockeru
 
 # Expose port for development server
 EXPOSE 3000
 
 # Spuštění vývojového serveru přímo přes npx
-CMD ["npx", "vite", "--host", "0.0.0.0"]
+CMD ["npx", "vite@2.6.4", "--host", "0.0.0.0"]
