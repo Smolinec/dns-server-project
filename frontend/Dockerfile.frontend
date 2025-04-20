@@ -5,8 +5,9 @@ WORKDIR /app
 # Kopírujeme konfigurační soubory pro npm
 COPY package*.json ./
 
-# Instalujeme závislosti
+# Instalujeme závislosti a explicitně přidáme react-scripts
 RUN npm install
+RUN npm install react-scripts@5.0.1 --save
 
 # Kopírujeme zbytek souborů
 COPY . .
@@ -14,8 +15,5 @@ COPY . .
 # Expose port for development server
 EXPOSE 3000
 
-# Zjistíme dostupné skripty a použijeme ten správný
-# Například pro Vite:
+# Spuštění vývojového serveru
 CMD ["npm", "run", "dev"]
-# Nebo pro obecné spuštění serveru:
-# CMD ["npx", "serve", "-s", "build", "-l", "3000"]
