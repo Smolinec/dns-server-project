@@ -2,11 +2,16 @@ FROM node:16
 
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
+# Kopírujeme konfigurační soubory pro npm
+COPY package*.json ./
 
+# Instalujeme závislosti
 RUN npm install
 
+# Kopírujeme zbytek souborů
 COPY . .
+
+# Expose port for development server (často 3000 nebo 5173)
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
