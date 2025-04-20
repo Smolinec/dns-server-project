@@ -2,19 +2,19 @@ FROM node:18
 
 WORKDIR /app
 
-# Kopírujeme pouze package.json a instalujeme závislosti
+# Kopírujeme package.json a instalujeme závislosti včetně Vite
 COPY package.json ./
 RUN npm install
+RUN npm install vite@2.6.4 --save
 
-# Vytvoříme zjednodušený vite.config.js, který explicitně neimportuje modul 'vite'
-RUN echo 'module.exports = { plugins: [require("@vitejs/plugin-react")()] }' > vite.config.js
-
-# Kopírujeme zbytek souborů, ale ne vite.config.js, který jsme právě vytvořili
+# Kopírujeme zdrojový kód aplikace
 COPY . .
-RUN rm -f src/vite.config.js  # Odstraníme případný existující soubor, který by mohl konfliktovat
+
+# Smažeme veškeré konfigurační soubory Vite - budeme používat výchozí konfiguraci
+RUN rm -f vite.config.js src/vite.config.js
 
 # Expose port for development server
 EXPOSE 3000
 
-# Spuštění jednoduchým příkazem bez závislosti na konfiguraci
-CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "3000"]
+# Spustíme Vite bez konfiguračního souboru
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "3000", "--config", "false"]
