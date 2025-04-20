@@ -2,19 +2,16 @@ FROM node:18
 
 WORKDIR /app
 
-# Kopírujeme package.json a instalujeme závislosti včetně Vite
+# Kopírujeme package.json a instalujeme závislosti
 COPY package.json ./
 RUN npm install
-RUN npm install vite@2.6.4 --save
+RUN npm install react-scripts@5.0.1 --save
 
 # Kopírujeme zdrojový kód aplikace
 COPY . .
 
-# Smažeme veškeré konfigurační soubory Vite - budeme používat výchozí konfiguraci
-RUN rm -f vite.config.js src/vite.config.js
-
-# Expose port for development server
+# Expose port
 EXPOSE 3000
 
-# Spustíme Vite bez konfiguračního souboru
-CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "3000", "--config", "false"]
+# Použijte react-scripts místo vite
+CMD ["npx", "react-scripts", "start"]
