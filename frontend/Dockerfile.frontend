@@ -14,5 +14,5 @@ COPY . .
 # Expose port for development server
 EXPOSE 3000
 
-# Spuštění vývojového serveru s konkrétní verzí
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Spuštění vývojového serveru přímo přes npx
+CMD ["npx", "vite", "--host", "0.0.0.0"]
