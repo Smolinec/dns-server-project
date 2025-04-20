@@ -14,7 +14,8 @@ COPY . .
 # Expose port for development server
 EXPOSE 3000
 
-# Změna zde - použití příkazu, který je definován v package.json
-CMD ["npm", "start"]
-# Alternativně:
-# CMD ["npx", "react-scripts", "start"]
+# Zjistíme dostupné skripty a použijeme ten správný
+# Například pro Vite:
+CMD ["npm", "run", "dev"]
+# Nebo pro obecné spuštění serveru:
+# CMD ["npx", "serve", "-s", "build", "-l", "3000"]
