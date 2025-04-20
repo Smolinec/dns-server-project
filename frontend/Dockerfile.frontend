@@ -2,16 +2,49 @@ FROM node:18
 
 WORKDIR /app
 
-# Kopírujeme package.json a instalujeme závislosti
-COPY package.json ./
-RUN npm install
-RUN npm install react-scripts@5.0.1 --save
+# Kopírujeme pouze zdrojové soubory
+COPY src ./src
+COPY public ./public
 
-# Kopírujeme zdrojový kód aplikace
-COPY . .
+# Vytváříme minimální package.json
+RUN echo '{\
+  "name": "dns-server-frontend",\
+  "version": "1.0.0",\
+  "dependencies": {\
+    "react": "^17.0.2",\
+    "react-dom": "^17.0.2",\
+    "axios": "^0.21.1"\
+  },\
+  "scripts": {\
+    "start": "vite",\
+    "build": "vite build"\
+  }\
+}' > package.json
+
+# Instalujeme pouze potřebné závislosti
+RUN npm install
+RUN npm install vite@2.6.4 @vitejs/plugin-react@1.0.0 --save-dev
+
+# Vytváříme minimální index.html pokud neexistuje
+RUN mkdir -p public && echo '<!DOCTYPE html>\
+<html>\
+<head>\
+  <title>DNS Server Management</title>\
+</head>\
+<body>\
+  <div id="root"></div>\
+  <script type="module" src="/src/index.js"></script>\
+</body>\
+</html>' > public/index.html
+
+# Vytváříme minimální vite.config.js
+RUN echo 'export default {\
+  root: ".",\
+  plugins: []\
+}' > vite.config.js
 
 # Expose port
 EXPOSE 3000
 
-# Použijte react-scripts místo vite
-CMD ["npx", "react-scripts", "start"]
+# Spouštíme vite
+CMD ["npx", "vite", "--host", "0.0.0.0", "--port", "3000"]
