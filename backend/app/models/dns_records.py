@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, validator
-from typing import List, Union
+from typing import List, Union, Optional
 
 class DNSRecordBase(BaseModel):
     name: str
@@ -44,6 +44,18 @@ class NSRecord(DNSRecordBase):
     type: str = "NS"
     value: str
 
+class DNSRecord(BaseModel):
+    name: str
+    type: str
+    content: str
+    ttl: int = 3600
+
+class DNSRecordCreate(BaseModel):
+    name: str
+    type: str
+    content: str
+    ttl: int = 3600
+
 class DNSZone(BaseModel):
     domain: str
-    records: List[Union[ARecord, AAAARecord, MXRecord, CNAMERecord, TXTRecord, NSRecord]] = []
+    records: List[Union[ARecord, AAAARecord, MXRecord, CNAMERecord, TXTRecord, NSRecord, DNSRecord]] = []
